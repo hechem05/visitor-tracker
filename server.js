@@ -12,28 +12,37 @@ const CHAT_ID = "7822574012";
 
 app.post("/visit", async (req, res) => {
 
-    const v = req.body;
+    try {
 
-    const text = `
-🚨 New Visitor
+        const v = req.body;
+
+        const text = `
+🚨 NEW VISITOR
+
+🌐 Website:
+${v.website || "Unknown Website"}
 
 🌍 Country: ${v.country}
 🏙 City: ${v.city}
 🌐 IP: ${v.ip}
 
-💻 Device: ${v.device}
-🖥 Platform: ${v.platform}
+📱 Device: ${v.device}
+💻 Platform: ${v.platform}
 
-📱 Screen: ${v.screen}
-🌎 Browser: ${v.browser}
+📏 Screen: ${v.screen}
 
-🔗 Page: ${v.page}
-↩ Referrer: ${v.referrer}
+🌎 Browser:
+${v.browser}
 
-🕒 Time: ${new Date().toLocaleString()}
+🔗 Page:
+${v.page}
+
+↩ Referrer:
+${v.referrer}
+
+🕒 Time:
+${new Date().toLocaleString()}
 `;
-
-    try {
 
         await axios.post(
             `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,
@@ -43,12 +52,22 @@ app.post("/visit", async (req, res) => {
             }
         );
 
-        res.sendStatus(200);
+        res.status(200).json({
+            success: true
+        });
 
     } catch (err) {
-        console.log(err.message);
-        res.sendStatus(500);
+
+        console.log("ERROR:", err.message);
+
+        res.status(500).json({
+            success: false
+        });
     }
+});
+
+app.get("/", (req, res) => {
+    res.send("Visitor Tracker Running");
 });
 
 const PORT = process.env.PORT || 3000;
