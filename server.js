@@ -8,7 +8,11 @@ app.use(express.json());
 app.use(cors());
 
 const BOT_TOKEN = "8673384230:AAGL8W0XLTWI8nybvBo8q-Wk9NwUlEgQDE4";
-const CHAT_ID = "7822574012";
+
+const CHAT_IDS = [
+    "7822574012",
+    "8602428097"
+];
 
 app.post("/visit", async (req, res) => {
 
@@ -44,13 +48,16 @@ ${v.referrer}
 ${new Date().toLocaleString()}
 `;
 
-        await axios.post(
-            `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,
-            {
-                chat_id: CHAT_ID,
-                text: text
-            }
-        );
+        for (const id of CHAT_IDS) {
+
+            await axios.post(
+                `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,
+                {
+                    chat_id: id,
+                    text: text
+                }
+            );
+        }
 
         res.status(200).json({
             success: true
